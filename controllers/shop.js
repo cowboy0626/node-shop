@@ -3,45 +3,46 @@ const Order = require('../models/order');
 
 exports.getIndexPage = (req, res, next) => { 
     Product.find()
-        .then(products => {
+    .then(products => {
         console.log('상품목록 : ',products);
-            res.render('shop/index', { 
-                prods: products,
-                pageTitle: 'Shop',
-                path: '/'
-        })
-        .catch(err => {
-            console.log(err);
+        res.render('shop/index', { 
+            prods: products,
+            pageTitle: 'Shop',
+            path: '/',
+            isAuthenticated: req.session.isLoggedIn
         });
+    })
+    .catch(err => {
+        console.log(err);
     });
+
 };
 
 exports.getProductListPage = (req, res, next) => {
     Product.find()
-        .then(products => {
-            res.render('shop/product-list', { 
-                prods: products,
-                pageTitle: 'All products',
-                path: '/products'
-        })
-        .catch(err => {
-            console.log(err);
+    .then(products => {
+        res.render('shop/product-list', { 
+            prods: products,
+            pageTitle: 'All products',
+            path: '/products'
         });
+    })
+    .catch(err => {
+        console.log(err);
     });
 };
 
 exports.getProductDetailPage = (req, res, next) => {
     const prodId = req.params.productId;
     Product.findById(prodId)
-        .then(product => {
+    .then(product => {
         res.render('shop/product-detail', { 
             pageTitle: product.title + ' product Detail Page',
             path: '/products',
             product: product
-        })
-        .catch(err => console.log(err));
-    });
-
+        });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.getCartPage = (req, res, next) => {

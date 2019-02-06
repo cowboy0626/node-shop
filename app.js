@@ -28,7 +28,7 @@ app.use(session({secret: 'MY SECRET', resave: false, saveUninitialized: false, s
 
 app.use((req, res, next) => {
   if (!req.session.user){
-    next();
+    return next();
   } 
   User.findById(req.session.user._id)
   .then(user => {
@@ -45,20 +45,8 @@ app.use(authRoutes);
 
 app.use(errorController.get404);
 
-mongoose.connect('mongodb+srv://temp-user-01:bQnm9Z4EO0ElVYul@cluster0-v087o.mongodb.net/shop?retryWrites=true', {useNewUrlParser: true})
+mongoose.connect(MONGODB_URI, {useNewUrlParser: true})
 .then(result => {
-  User.findOne().then(user => {
-    if(!user){
-      const user = new User({
-        name: 'cowboy0626', 
-        email: 'cowboy0626@naver.com',
-        cart : {
-          items: []
-        }
-      });
-      user.save();
-    }
-  })
   app.listen(3000);
 })
 .catch(err => console.log(err));
