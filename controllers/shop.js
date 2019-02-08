@@ -8,8 +8,7 @@ exports.getIndexPage = (req, res, next) => {
         res.render('shop/index', { 
             prods: products,
             pageTitle: 'Shop',
-            path: '/',
-            isAuthenticated: req.session.isLoggedIn
+            path: '/'
         });
     })
     .catch(err => {
@@ -95,7 +94,7 @@ exports.postOrder = (req, res, next) => {
         });
         const order = new Order({
             user: {
-                name: req.user.name,
+                email: req.user.email,
                 userId: req.user // user로만 해도 user.userId를 mongoose가 자동으로 찾아줌 
             },
             products: products
@@ -109,10 +108,7 @@ exports.postOrder = (req, res, next) => {
     })
     .then(() => {
         // 이동하기 
-        res.render('shop/order-list', {
-            pageTitle: 'Your Orders',
-            path: '/orders'
-        });
+        res.redirect('/orders');
     })
     .catch(err => console.log(err));
 
@@ -121,6 +117,7 @@ exports.postOrder = (req, res, next) => {
 exports.getOrderListPage = (req, res, next) => {
     Order.find({'user.userId': req.user._id})
     .then(orders => {
+        console.log('@@ orders for user : '+req.user._id + ' are '+orders);
         res.render('shop/order-list', {
             pageTitle: 'Your Orders',
             path: '/orders',
